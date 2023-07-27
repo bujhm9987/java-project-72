@@ -70,7 +70,7 @@ compileJava {
 }
 
 application {
-    mainClass = 'io.hexlet.blog.App'
+    mainClass = 'hexlet.code.App'
 }
 
 task stage(dependsOn: ['clean', 'installDist'])
