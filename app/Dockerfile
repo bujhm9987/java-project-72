@@ -1,8 +1,8 @@
-FROM gradle:8.2.1-jdk20
+FROM gradle:8.2-jdk20
 
-WORKDIR /app
+WORKDIR /
 
-COPY /app .
+COPY ./ .
 
 RUN gradle installDist
 
