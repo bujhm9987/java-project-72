@@ -13,6 +13,8 @@
 
 "Анализатор страниц" – сайт, который анализирует указанные страницы на SEO пригодность.
 
+https://java-project-72-production-10bb.up.railway.app/
+
 ### Установка
 
     git clone git@github.com:bujhm9987/java-project-72.git
