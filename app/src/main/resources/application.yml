@@ -1,9 +1,8 @@
-## H2 setup - In memory
 datasource:
   default: ${APP_ENV}
   development:
-    username: sa
-    password: sa
+    username: ""
+    password: ""
     url: "jdbc:h2:./database"
   production:
     username: ${JDBC_DATABASE_USERNAME}
@@ -11,9 +10,5 @@ datasource:
     url: ${JDBC_DATABASE_URL}
 
 ebean:
-  ddl:
-    generate: true
+  migration:
     run: true
-    seedSql: seed.sql
-    # migration:
-    #   run: true

@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.controllers.UrlController;
 import hexlet.code.controllers.RootController;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
@@ -8,6 +9,9 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+
+import static io.javalin.apibuilder.ApiBuilder.*;
+
 
 public class App {
     private static int getPort() {
@@ -26,6 +30,12 @@ public class App {
     private static void addRoutes(Javalin app) {
         app.get("/", RootController.welcome);
 
+        app.routes(() -> {
+            path("urls", () -> {
+                get(UrlController.listUrls);
+                //post(UrlController.addUrl);
+            });
+        });
     }
 
     private static TemplateEngine getTemplateEngine() {
@@ -36,7 +46,7 @@ public class App {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/templates/");
         templateResolver.setCharacterEncoding("UTF-8");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
+        //templateResolver.setTemplateMode(TemplateMode.HTML);
         templateEngine.addTemplateResolver(templateResolver);
 
         return templateEngine;
@@ -44,7 +54,10 @@ public class App {
 
     public static Javalin getApp() {
         Javalin app = Javalin.create(config -> {
-            config.plugins.enableDevLogging();
+            if (!isProduction()) {
+                config.plugins.enableDevLogging();
+            }
+
             JavalinThymeleaf.init(getTemplateEngine());
         });
 

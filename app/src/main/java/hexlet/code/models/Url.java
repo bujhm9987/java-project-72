@@ -9,26 +9,29 @@ import io.ebean.annotation.WhenCreated;
 import java.time.Instant;
 
 @Entity
-public class Url extends Model{
-    @Id
-    long id;
-    String name;
-    @WhenCreated
-    Instant createdAt;
+public final class Url extends Model{
 
-    public Url (String name) {
+    @Id
+    private long id;
+
+    private String name;
+
+    @WhenCreated
+    private Instant createdAt;
+
+    public Url(String name) {
         this.name = name;
     }
 
     public long getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Instant getCreatedAt() {
-        return createdAt;
+        return this.createdAt;
     }
 }
