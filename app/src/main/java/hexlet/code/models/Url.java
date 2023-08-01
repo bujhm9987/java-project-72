@@ -9,7 +9,7 @@ import io.ebean.annotation.WhenCreated;
 import java.time.Instant;
 
 @Entity
-public final class Url extends Model{
+public final class Url extends Model {
 
     @Id
     private long id;

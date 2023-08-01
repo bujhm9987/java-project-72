@@ -2,16 +2,13 @@ package hexlet.code.controllers;
 
 import hexlet.code.models.Url;
 import hexlet.code.models.query.QUrl;
-import io.ebean.PagedList;
 import io.javalin.http.Handler;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public final class UrlController {
     public static Handler listUrls = ctx -> {
-        int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
+        /*int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
 
@@ -29,11 +26,12 @@ public final class UrlController {
         List<Integer> pages = IntStream
                 .range(1, lastPage)
                 .boxed()
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        List<Url> urls = new QUrl().findList();
 
         ctx.attribute("urls", urls);
-        ctx.attribute("pages", pages);
-        ctx.attribute("currentPage", currentPage);
+        //ctx.attribute("pages", pages);
+        //ctx.attribute("currentPage", currentPage);
         ctx.render("urls/listurls.html");
     };
 

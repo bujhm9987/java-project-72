@@ -5,12 +5,14 @@ import hexlet.code.controllers.RootController;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
 
 
 public class App {
@@ -46,7 +48,6 @@ public class App {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/templates/");
         templateResolver.setCharacterEncoding("UTF-8");
-        //templateResolver.setTemplateMode(TemplateMode.HTML);
         templateEngine.addTemplateResolver(templateResolver);
 
         return templateEngine;
@@ -57,7 +58,6 @@ public class App {
             if (!isProduction()) {
                 config.plugins.enableDevLogging();
             }
-
             JavalinThymeleaf.init(getTemplateEngine());
         });
 
@@ -70,20 +70,12 @@ public class App {
         return app;
     }
 
+    public static Logger getLogger() {
+        return LoggerFactory.getLogger(App.class);
+    }
+
     public static void main(String[] args) {
         Javalin app = getApp();
         app.start(getPort());
     }
-
-    /*
-Hostname    dpg-cj1bini7l0ft7nlq1uj0-a
-Port    5432
-Database    db_roby
-Username    db_roby_user
-Password    Hf6zFCjJ4UzRvNNXdLsSmDSn1dVdGFRY
-Internal Database URL   postgres://db_roby_user:Hf6zFCjJ4UzRvNNXdLsSmDSn1dVdGFRY@dpg-cj1bini7l0ft7nlq1uj0-a/db_roby
-External Database URL   postgres://db_roby_user:Hf6zFCjJ4UzRvNNXdLsSmDSn1dVdGFRY@dpg-cj1bini7l0ft7nlq1uj0-a.singapore-postgres.render.com/db_roby
-PSQL Command    PGPASSWORD=Hf6zFCjJ4UzRvNNXdLsSmDSn1dVdGFRY psql -h dpg-cj1bini7l0ft7nlq1uj0-a.singapore-postgres.render.com -U db_roby_user db_roby
-    */
-
 }
