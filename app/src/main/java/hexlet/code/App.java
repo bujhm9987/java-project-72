@@ -17,8 +17,6 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 
 
 public final class App {
-    //private static String APP_ENV = "development";
-    //private static final String APP_ENV = System.getenv().getOrDefault("APP_ENV", "development");
 
     private static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "8000");
@@ -40,6 +38,9 @@ public final class App {
             path("urls", () -> {
                 get(UrlController.listUrls);
                 post(UrlController.addUrl);
+                path("{id}", () -> {
+                    get(UrlController.showUrl);
+                });
             });
         });
     }
