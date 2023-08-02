@@ -50,3 +50,4 @@ app/assets/builds/
 app/build/*
 app/.gradle/
 README.md.backup
+*.db

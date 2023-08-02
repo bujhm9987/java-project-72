@@ -16,12 +16,11 @@
                 </thead>
                 <tbody>
                 <tr th:each="url : ${urls}" th:object="${url}">
-                    <td th:text="{getId()}"></td>
-                    <td>
-                        <a th:href="@{/urls/{id}(id=*{getId()})}" th:text="${#strings.abbreviate(url.getName(), 30)}"></a>
-                    </td>
+                    <td th:text="*{getId()}"></td>
+                    <td><a th:href="@{/urls/{id}(id=*{id})}" th:text="*{getName()}"></a></td>
+                    <td th:text="*{getCreatedAt()}"></td>
                     <td></td>
-                    <td></td>
+                </tr>
                 </tbody>
             </table>
         </div>

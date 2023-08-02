@@ -1,8 +1,8 @@
 datasource:
   default: ${APP_ENV}
   development:
-    username: ""
-    password: ""
+    username: sa
+    password: sa
     url: "jdbc:h2:./database"
   production:
     username: ${JDBC_DATABASE_USERNAME}
@@ -10,12 +10,6 @@ datasource:
     url: ${JDBC_DATABASE_URL}
 
 ebean:
-  ddl:
+  migration:
     run: true
-    generate: true
-  #development:
-  #  migration:
-  #    run: true
-  #production:
-  #  migration:
-  #    run: true
+

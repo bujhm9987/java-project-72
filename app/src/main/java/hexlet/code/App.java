@@ -12,10 +12,14 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.post;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 
-public class App {
+public final class App {
+    //private static String APP_ENV = "development";
+    //private static final String APP_ENV = System.getenv().getOrDefault("APP_ENV", "development");
+
     private static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "8000");
         return Integer.valueOf(port);
@@ -35,7 +39,7 @@ public class App {
         app.routes(() -> {
             path("urls", () -> {
                 get(UrlController.listUrls);
-                //post(UrlController.addUrl);
+                post(UrlController.addUrl);
             });
         });
     }

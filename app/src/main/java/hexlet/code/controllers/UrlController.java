@@ -2,12 +2,19 @@ package hexlet.code.controllers;
 
 import hexlet.code.models.Url;
 import hexlet.code.models.query.QUrl;
+import io.ebean.PagedList;
 import io.javalin.http.Handler;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 
 public final class UrlController {
     public static Handler listUrls = ctx -> {
+
+
+
         /*int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
@@ -27,6 +34,7 @@ public final class UrlController {
                 .range(1, lastPage)
                 .boxed()
                 .collect(Collectors.toList());*/
+
         List<Url> urls = new QUrl().findList();
 
         ctx.attribute("urls", urls);
@@ -35,20 +43,17 @@ public final class UrlController {
         ctx.render("urls/listurls.html");
     };
 
-    /*public static Handler addUrl = ctx -> {
-        //String name = ctx.formParam("name");
-        String name = "Igor";
+    public static Handler addUrl = ctx -> {
+        String name = ctx.formParam("url");
 
         Url url = new Url(name);
 
 
-        //url.save();
+        url.save();
 
-        //ctx.sessionAttribute("flash", "Страница успешно добавлена");
-
-        ctx.sessionAttribute("flash", url.getName());
+        ctx.sessionAttribute("flash", "Страница успешно добавлена");
         ctx.sessionAttribute("flash-type", "success");
         ctx.redirect("/urls");
-    };*/
+    };
 
 }
