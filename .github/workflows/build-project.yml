@@ -1,12 +1,7 @@
 name: Java CI
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  - push
 
 jobs:
   build:
@@ -14,7 +9,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - name: Setup JDK 20
+        uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '20'
@@ -23,8 +19,8 @@ jobs:
         with:
           arguments: build
           build-root-directory: app
-      - name: Publish code coverage
-        uses: paambaati/codeclimate-action@v3.0.0
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v5.0.0
         if: ${{ github.event_name == 'push' }}
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
