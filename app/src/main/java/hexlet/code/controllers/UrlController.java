@@ -73,7 +73,7 @@ public final class UrlController {
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
-            ctx.redirect("/");
+            ctx.render("index.html");
         }
 
     };
