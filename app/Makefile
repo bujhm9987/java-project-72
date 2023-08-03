@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := build-run
+
 setup:
 	gradle wrapper --gradle-version 8.2
 
@@ -14,7 +16,7 @@ install:
 	./gradlew install
 
 start-dist:
-	APP_ENV=production ./build/install/java-javalin-blog/bin/java-javalin-blog
+	APP_ENV=production ./build/install/app/bin/app
 
 generate-migrations:
 	./gradlew generateMigrations
@@ -31,10 +33,7 @@ report:
 check-updates:
 	./gradlew dependencyUpdates
 
-image-build:
-	docker build -t hexletcomponents/java-javalin-blog:latest .
-
-image-push:
-	docker push hexletcomponents/java-javalin-blog:latest
+build-run:
+	build run
 
 .PHONY: build

@@ -6,6 +6,7 @@ import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 public class Url extends Model {
@@ -19,6 +20,9 @@ public class Url extends Model {
 
     @WhenCreated
     private Instant createdAt;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UrlCheck> urlChecks;
 
     public Url(String name) {
         this.name = name;
