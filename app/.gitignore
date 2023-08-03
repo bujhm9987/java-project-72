@@ -52,4 +52,5 @@ app/.gradle/
 README.md.backup
 *.db
 *mv.db
+database.mv.db
 
