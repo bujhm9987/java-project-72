@@ -1,11 +1,39 @@
-buid:
-	make -C app build
+.DEFAULT_GOAL := build-run
+
+setup:
+	gradle wrapper --gradle-version 8.2
+
+clean:
+	./gradlew clean
+
+build:
+	./gradlew clean build
+
+start:
+	APP_ENV=development ./gradlew run
+
 install:
-	make -C app install
-report:
-	make -C app report
-test:
-	make -C app test
+	./gradlew install
+
+start-dist:
+	APP_ENV=production ./build/install/app/bin/app
+
+generate-migrations:
+	./gradlew generateMigrations
+
 lint:
-	make -C app lint
+	./gradlew checkstyleMain checkstyleTest
+
+test:
+	./gradlew test
+
+report:
+	./gradlew jacocoTestReport
+
+check-updates:
+	./gradlew dependencyUpdates
+
+build-run:
+	build run
+
 .PHONY: build
