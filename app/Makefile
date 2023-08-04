@@ -13,7 +13,7 @@ start:
 	APP_ENV=development ./gradlew run
 
 install:
-	./gradlew install
+	./gradlew clean install
 
 start-dist:
 	APP_ENV=production ./build/install/app/bin/app
@@ -35,5 +35,10 @@ check-updates:
 
 build-run:
 	build run
+
+run-dist:
+	build/install/app/bin/app
+
+build-run: build run
 
 .PHONY: build
