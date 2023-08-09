@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    //id 'checkstyle'
+    id 'checkstyle'
     id 'com.adarshr.test-logger' version '3.2.0'
     id 'com.github.ben-manes.versions' version '0.42.0'
     id 'io.ebean' version '13.20.1'
@@ -41,13 +41,17 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
     implementation 'javax.activation:activation:1.1.1'
 
+    implementation 'com.konghq:unirest-java:3.14.5'
+
+    implementation 'org.jsoup:jsoup:1.16.1'
+
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'io.ebean:ebean-test:13.20.1'
     testImplementation 'com.konghq:unirest-java:3.14.5'
 
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.10.0'
 }
 
 test {
@@ -65,9 +69,9 @@ jacocoTestReport {
     }
 }
 
-/*checkstyle {
+checkstyle {
     toolVersion = '10.12.2'
-}*/
+}
 
 compileJava {
     options.release = 20

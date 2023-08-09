@@ -1,12 +1,13 @@
 package hexlet.code.models;
 
+import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-public class UrlCheck {
+public final class UrlCheck extends Model {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

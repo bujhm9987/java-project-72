@@ -32,14 +32,17 @@
     <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-  <div class="container mt-4">
-  <div class="container mt-4">
-    <h1 class="my-4">
-      <section layout:fragment="header"></section>
-    </h1>
-    <section layout:fragment="content"></section>
-  </div>
+  <section layout:fragment="content"></section>
 </main>
+
+<footer class="footer border-top py-3 mt-5 bg-light">
+  <div class="container-xl">
+    <div class="text-center">
+      Проект hexlet.io, автор -
+      <a href="https://github.com/bujhm9987" target="_blank">Павлов Игорь</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 

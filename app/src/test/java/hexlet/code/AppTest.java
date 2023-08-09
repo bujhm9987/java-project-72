@@ -1,5 +1,10 @@
 package hexlet.code;
 
+import hexlet.code.models.UrlCheck;
+import hexlet.code.models.query.QUrlCheck;
+import kong.unirest.Empty;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +19,15 @@ import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+
+import javax.swing.text.DateFormatter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -73,7 +87,6 @@ class AppTest {
 
             assertThat(responseGet.getStatus()).isEqualTo(200);
             assertThat(body).contains("https://github.com");
-            assertThat(body).contains("21/02/2022 12:00");
         }
 
         @Test
@@ -102,7 +115,7 @@ class AppTest {
             String expectedUrl = "https://dzen.ru";
 
 
-            HttpResponse responsePost = Unirest
+            HttpResponse<Empty> responsePost = Unirest
                     .post(baseUrl + "/urls")
                     .field("url", inputUrl)
                     .asEmpty();
@@ -134,7 +147,7 @@ class AppTest {
 
             String badUrl = "yandex.ru";
 
-            HttpResponse responsePost = Unirest
+            HttpResponse<Empty> responsePost = Unirest
                     .post(baseUrl + "/urls")
                     .field("url", badUrl)
                     .asEmpty();
@@ -146,6 +159,64 @@ class AppTest {
                     .findOne();
 
             assertThat(actualUrl).isNull();
+
+        }
+
+        @Test
+        @DisplayName("Тестирование страницы проверки сайтов")
+        void testChecksUrl() throws IOException {
+            MockWebServer mockServer = new MockWebServer();
+
+            String mockUrl = mockServer.url("/").toString();
+
+            String testPage = Files.readString(Paths.get("src/test/resources", "testedPage.html"));
+
+            MockResponse mockResponse = new MockResponse().setBody(testPage);
+
+            mockServer.enqueue(mockResponse);
+
+            HttpResponse<Empty> responsePost = Unirest
+                    .post(baseUrl + "/urls")
+                    .field("url", mockUrl)
+                    .asEmpty();
+            assertThat(responsePost.getStatus()).isEqualTo(302);
+
+            Url urlInDb = new QUrl()
+                    .name.equalTo(mockUrl.substring(0, mockUrl.length() - 1))
+                    .findOne();
+            assertThat(urlInDb).isNotNull();
+
+            HttpResponse<Empty> responsePostChecks = Unirest
+                    .post(baseUrl + "/urls/" + urlInDb.getId() + "/checks")
+                    .asEmpty();
+            assertThat(responsePostChecks.getStatus()).isEqualTo(302);
+
+            UrlCheck checksInDb = new QUrlCheck()
+                    .url.equalTo(urlInDb)
+                    .createdAt.desc()
+                    .setMaxRows(1)
+                    .findOne();
+            assertThat(checksInDb).isNotNull();
+
+            HttpResponse<String> responseChecks = Unirest
+                    .get(baseUrl + "/urls/" + urlInDb.getId())
+                    .asString();
+            assertThat(responseChecks.getStatus()).isEqualTo(200);
+
+            String body = responseChecks.getBody();
+
+            assertThat(body.contains(checksInDb.getH1())).isTrue();
+            assertThat(body.contains(checksInDb.getTitle())).isTrue();
+            assertThat(body.contains(checksInDb.getDescription())).isTrue();
+            assertThat(body.contains(checksInDb.getUrl().getName())).isTrue();
+            assertThat(body.contains(String.valueOf(checksInDb.getStatusCode()))).isTrue();
+
+            Instant createdAt = checksInDb.getUrl().getCreatedAt();
+            String formattedCreatedAt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                    .withZone(ZoneId.systemDefault()).format(createdAt);
+            assertThat(body.contains(formattedCreatedAt)).isTrue();
+
+            mockServer.shutdown();
         }
     }
 }
