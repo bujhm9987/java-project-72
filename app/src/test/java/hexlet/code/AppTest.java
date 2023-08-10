@@ -20,11 +20,9 @@ import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -169,7 +167,8 @@ class AppTest {
 
             String mockUrl = mockServer.url("/").toString();
 
-            String testPage = Files.readString(Paths.get("src/test/resources", "testedPage.html"));
+            String testPage = Files.readString(Paths
+                    .get("src/test/resources", "testedPage.html"));
 
             MockResponse mockResponse = new MockResponse().setBody(testPage);
 

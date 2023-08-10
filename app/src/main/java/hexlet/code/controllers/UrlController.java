@@ -97,7 +97,7 @@ public final class UrlController {
             throw new NotFoundResponse();
         }
 
-        List<UrlCheck> urlChecks= new QUrlCheck()
+        List<UrlCheck> urlChecks = new QUrlCheck()
                 .url.equalTo(url)
                 .orderBy().id.desc()
                 .findList();
