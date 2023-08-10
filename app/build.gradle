@@ -72,6 +72,8 @@ jacocoTestReport {
 checkstyle {
     toolVersion = '10.12.2'
 }
+checkstyleMain.source = "src/main/java"
+checkstyleTest.source = "src/test/java"
 
 compileJava {
     options.release = 20
