@@ -146,7 +146,7 @@ class AppTest {
     }
 
     @Nested
-    @DisplayName("Тестирование БД")
+    @DisplayName("Тестирование проверки сайтов")
     class UrlChecksTest {
 
         @Test
