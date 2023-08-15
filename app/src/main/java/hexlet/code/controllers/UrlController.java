@@ -51,38 +51,38 @@ public final class UrlController {
 
     public static Handler addUrl = ctx -> {
         String name = ctx.formParam("url");
+        URL url;
 
         try {
             if (name == null) {
                 return;
             }
-
-            URL url = new URL(name);
-            String parsingUrl = url.getProtocol() + "://" + url.getAuthority();
-
-            Url urlInDb = new QUrl()
-                    .name.equalTo(parsingUrl)
-                    .findOne();
-
-            if (urlInDb != null) {
-                ctx.sessionAttribute("flash", "Страница уже существует");
-                ctx.sessionAttribute("flash-type", "info");
-                ctx.redirect("/urls");
-                return;
-            }
-
-            Url newUrl = new Url(parsingUrl);
-            newUrl.save();
-
-            ctx.sessionAttribute("flash", "Страница успешно добавлена");
-            ctx.sessionAttribute("flash-type", "success");
-            ctx.redirect("/urls");
-
+            url = new URL(name);
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.render("index.html");
+            return;
         }
+
+        String parsingUrl = url.getProtocol() + "://" + url.getAuthority();
+        Url urlInDb = new QUrl()
+                .name.equalTo(parsingUrl)
+                .findOne();
+
+        if (urlInDb != null) {
+            ctx.sessionAttribute("flash", "Страница уже существует");
+            ctx.sessionAttribute("flash-type", "info");
+            ctx.redirect("/urls");
+            return;
+        }
+
+        Url newUrl = new Url(parsingUrl);
+        newUrl.save();
+
+        ctx.sessionAttribute("flash", "Страница успешно добавлена");
+        ctx.sessionAttribute("flash-type", "success");
+        ctx.redirect("/urls");
 
     };
 

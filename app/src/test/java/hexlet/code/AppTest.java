@@ -31,28 +31,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
 
-    @Test
-    @DisplayName("Инициализация тестов")
-    void testInit() {
-        assertThat(true).isEqualTo(true);
-    }
-
     private static Javalin app;
     private static String baseUrl;
     private static Database database;
+    private static MockWebServer mockServer;
+    private static String mockUrl;
+
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeAll() throws IOException {
         app = App.getApp();
         app.start(0);
         int port = app.port();
         baseUrl = "http://localhost:" + port;
         database = DB.getDefault();
+
+        mockServer = new MockWebServer();
+        mockUrl = mockServer.url("/").toString();
+        String testPage = Files.readString(Paths
+                .get("src/test/resources", "testedPage.html"));
+        MockResponse mockResponse = new MockResponse().setBody(testPage);
+        mockServer.enqueue(mockResponse);
     }
 
     @AfterAll
-    public static void afterAll() {
+    public static void afterAll() throws IOException {
         app.stop();
+        mockServer.shutdown();
     }
 
     @BeforeEach
@@ -63,7 +68,7 @@ class AppTest {
 
     @Nested
     @DisplayName("Тестирование страниц")
-    class RootTest {
+    class UrlTest {
 
         @Test
         @DisplayName("Тестирование стартовой страницы index.html")
@@ -88,30 +93,11 @@ class AppTest {
         }
 
         @Test
-        @DisplayName("Тестирование /urls/show.html")
-        void testUrlsShow() {
-            HttpResponse<String> responseGet = Unirest
-                    .get(baseUrl + "/urls/1")
-                    .asString();
-            String body = responseGet.getBody();
-
-            assertThat(responseGet.getStatus()).isEqualTo(200);
-            assertThat(body).contains("https://ru.hexlet.io");
-            assertThat(body).contains("Проверки");
-        }
-    }
-
-    @Nested
-    @DisplayName("Тестирование БД")
-    class DatabaseTest {
-
-        @Test
-        @DisplayName("Тестирование добавления страницы (позитивное)")
-        void testPositiveAddUrl() {
+        @DisplayName("Тестирование добавления страницы (корректный формат url)")
+        void testAddingUrl() {
 
             String inputUrl = "https://dzen.ru/?yredirect=true";
             String expectedUrl = "https://dzen.ru";
-
 
             HttpResponse<Empty> responsePost = Unirest
                     .post(baseUrl + "/urls")
@@ -136,12 +122,11 @@ class AppTest {
 
             assertThat(actualUrl).isNotNull();
             assertThat(actualUrl.getName()).isEqualTo(expectedUrl);
-
         }
 
         @Test
-        @DisplayName("Тестирование добавления страницы (негативное)")
-        void testNegativeAddUrl() {
+        @DisplayName("Тестирование добавления страницы (некорректный формат url)")
+        void testErrorWhenAddingBadUrl() {
 
             String badUrl = "yandex.ru";
 
@@ -157,22 +142,29 @@ class AppTest {
                     .findOne();
 
             assertThat(actualUrl).isNull();
+        }
+    }
 
+    @Nested
+    @DisplayName("Тестирование БД")
+    class UrlChecksTest {
+
+        @Test
+        @DisplayName("Тестирование /urls/show.html")
+        void testUrlsShow() {
+            HttpResponse<String> responseGet = Unirest
+                    .get(baseUrl + "/urls/1")
+                    .asString();
+            String body = responseGet.getBody();
+
+            assertThat(responseGet.getStatus()).isEqualTo(200);
+            assertThat(body).contains("https://ru.hexlet.io");
+            assertThat(body).contains("Проверки");
         }
 
         @Test
         @DisplayName("Тестирование страницы проверки сайтов")
-        void testChecksUrl() throws IOException {
-            MockWebServer mockServer = new MockWebServer();
-
-            String mockUrl = mockServer.url("/").toString();
-
-            String testPage = Files.readString(Paths
-                    .get("src/test/resources", "testedPage.html"));
-
-            MockResponse mockResponse = new MockResponse().setBody(testPage);
-
-            mockServer.enqueue(mockResponse);
+        void testChecksUrl() {
 
             HttpResponse<Empty> responsePost = Unirest
                     .post(baseUrl + "/urls")
@@ -214,8 +206,6 @@ class AppTest {
             String formattedCreatedAt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
                     .withZone(ZoneId.systemDefault()).format(createdAt);
             assertThat(body.contains(formattedCreatedAt)).isTrue();
-
-            mockServer.shutdown();
         }
     }
 }
